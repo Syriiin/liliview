@@ -21,18 +21,11 @@ const Liliview = () => {
     }
 
     return (
-        <div>
-            <h1>welcome to lili</h1>
+        <div className="liliview-container">
             {user !== null ? (
-                <>
-                    <h3>logged in as {user.username}</h3>
-                    <button onClick={handleLogout}>logout</button>
-                    <LilipadList />
-                </>
+                <LilipadList user={user} logout={handleLogout} />
             ) : (
-                <>
-                    <LoginForm setUser={setUser} />
-                </>
+                <LoginForm setUser={setUser} />
             )}
         </div>
     );

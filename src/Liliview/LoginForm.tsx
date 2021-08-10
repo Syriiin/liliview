@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { login, register } from "../requests";
 import { User } from "../types";
 
@@ -12,7 +13,8 @@ const LoginForm = (props: LoginFormProps) => {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const handleLogin = async () => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         setLoading(true);
         const user = await login(username, password);
         setLoading(false);
@@ -22,6 +24,7 @@ const LoginForm = (props: LoginFormProps) => {
         } else {
             setErrorMessage("Credentials are incorrect");
         }
+        return false;
     }
 
     const handleRegister = async () => {
@@ -37,13 +40,31 @@ const LoginForm = (props: LoginFormProps) => {
     }
 
     return (
-        <div>
-            <p>{errorMessage}</p>
-            <input placeholder="username" type="text" value={username} onChange={e => setUsername(e.target.value)} disabled={loading} />
-            <input placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
-            <button onClick={handleLogin} disabled={loading}>login</button>
-            <button onClick={handleRegister} disabled={loading}>register</button>
-        </div>
+        <Container className="mt-5">
+            <Row className="justify-content-center">
+                <Col xs={4} className="align-middle">
+                    <h1>welcome to lili</h1>
+                    <p className="text-danger">{errorMessage}</p>
+                    <Form onSubmit={handleLogin}>
+                        <Form.Group className="mb-3" controlId="formBasicUsername">
+                            <Form.Label>username</Form.Label>
+                            <Form.Control className="text-light" placeholder="username" type="text" value={username} onChange={e => setUsername(e.target.value)} />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Label>password</Form.Label>
+                            <Form.Control className="text-light" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                        </Form.Group>
+                        <Button variant="primary" type="submit" disabled={loading}>
+                            login
+                        </Button>{' '}
+                        <Button variant="primary" disabled={loading} onClick={handleRegister}>
+                            register
+                        </Button>
+                    </Form>
+                </Col>
+            </Row>
+        </Container>
     );
 }
 
