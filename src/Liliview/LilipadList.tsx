@@ -82,6 +82,13 @@ const LilipadList = (props: LilipadListProps) => {
         }
     }
 
+    const handleEditorKeyDown = (e: React.KeyboardEvent) => {
+        if (e.code === "KeyS" && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+            e.preventDefault();
+            handleSaveLilipad();
+        }
+    }
+
     return (
         <Container fluid>
             <Row className="vh-100">
@@ -120,13 +127,15 @@ const LilipadList = (props: LilipadListProps) => {
                         <h3 className="m-5">Loading...</h3>
                     )}
                     {editingLilipad !== null && (
-                        <Editor
-                            height="100vh"
-                            theme="vs-dark"
-                            defaultLanguage="markdown"
-                            defaultValue={text}
-                            onChange={handleEditorChange}
-                        />
+                        <div onKeyDown={handleEditorKeyDown}>
+                            <Editor
+                                height="100vh"
+                                theme="vs-dark"
+                                defaultLanguage="markdown"
+                                defaultValue={text}
+                                onChange={handleEditorChange}
+                            />
+                        </div>
                     )}
                 </Col>
             </Row>
