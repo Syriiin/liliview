@@ -25,7 +25,7 @@ const LoginForm = (props: LoginFormProps) => {
             setErrorMessage("Credentials are incorrect");
         }
         return false;
-    }
+    };
 
     const handleRegister = async () => {
         setLoading(true);
@@ -37,7 +37,7 @@ const LoginForm = (props: LoginFormProps) => {
         } else {
             setErrorMessage(`Username ${username} is not available`);
         }
-    }
+    };
 
     return (
         <Container className="mt-5">
@@ -46,19 +46,44 @@ const LoginForm = (props: LoginFormProps) => {
                     <h1>welcome to lili</h1>
                     <p className="text-danger">{errorMessage}</p>
                     <Form onSubmit={handleLogin}>
-                        <Form.Group className="mb-3" controlId="formBasicUsername">
+                        <Form.Group
+                            className="mb-3"
+                            controlId="formBasicUsername"
+                        >
                             <Form.Label>username</Form.Label>
-                            <Form.Control className="text-light" placeholder="username" type="text" value={username} onChange={e => setUsername(e.target.value)} />
+                            <Form.Control
+                                className="text-light"
+                                placeholder="username"
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
                         </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Group
+                            className="mb-3"
+                            controlId="formBasicPassword"
+                        >
                             <Form.Label>password</Form.Label>
-                            <Form.Control className="text-light" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                            <Form.Control
+                                className="text-light"
+                                placeholder="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
                         </Form.Group>
-                        <Button variant="primary" type="submit" disabled={loading}>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={loading}
+                        >
                             login
-                        </Button>{' '}
-                        <Button variant="primary" disabled={loading} onClick={handleRegister}>
+                        </Button>{" "}
+                        <Button
+                            variant="primary"
+                            disabled={loading}
+                            onClick={handleRegister}
+                        >
                             register
                         </Button>
                     </Form>
@@ -66,6 +91,6 @@ const LoginForm = (props: LoginFormProps) => {
             </Row>
         </Container>
     );
-}
+};
 
 export default LoginForm;

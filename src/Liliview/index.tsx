@@ -18,7 +18,7 @@ const Liliview = () => {
     const handleLogout = () => {
         localStorage.removeItem("liliToken");
         setUser(null);
-    }
+    };
 
     return (
         <div className="liliview-container">
@@ -29,6 +29,6 @@ const Liliview = () => {
             )}
         </div>
     );
-}
+};
 
 export default Liliview;
