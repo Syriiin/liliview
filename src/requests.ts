@@ -1,4 +1,5 @@
 import ky from "ky";
+import { toast } from "react-toastify";
 import { Lilipad, LilipadInfo, User } from "./types";
 
 const http = ky.create({
@@ -23,7 +24,7 @@ export async function register(username: string, password: string): Promise<User
                 password
             }
         }).json();
-        localStorage.setItem("liliToken", data.token)
+        localStorage.setItem("liliToken", data.token);
         return await loadMe();
     } catch (error) {
         console.log(error);
@@ -39,7 +40,7 @@ export async function login(username: string, password: string): Promise<User | 
                 password
             }
         }).json();
-        localStorage.setItem("liliToken", data.token)
+        localStorage.setItem("liliToken", data.token);
         return await loadMe();
     } catch (error) {
         console.log(error);
@@ -61,19 +62,27 @@ export async function loadLilipads(): Promise<LilipadInfo[]> {
         return await http.get("lilipads").json<LilipadInfo[]>();
     } catch (error) {
         console.log(error);
+        toast.error("failed to load lilipads...", {
+            autoClose: 5000
+        });
         return [];
     }
 }
 
 export async function createLilipad(name: string): Promise<Lilipad | null> {
     try {
-        return await http.post("lilipads", {
+        const lilipad = await http.post("lilipads", {
             json: {
                 name
             }
         }).json<Lilipad>();
+        toast.success("lilipad created");
+        return lilipad;
     } catch (error) {
         console.log(error);
+        toast.error("failed to create lilipad...", {
+            autoClose: 5000
+        });
         return null;
     }
 }
@@ -83,20 +92,28 @@ export async function loadLilipad(id: number): Promise<Lilipad | null> {
         return await http.get(`lilipads/${id}`).json<Lilipad>();
     } catch (error) {
         console.log(error);
+        toast.error("failed to load lilipad...", {
+            autoClose: 5000
+        });
         return null;
     }
 }
 
 export async function updateLilipad(lilipad: Lilipad): Promise<Lilipad | null> {
     try {
-        return await http.put(`lilipads/${lilipad.id}`, {
+        const updatedLilipad = await http.put(`lilipads/${lilipad.id}`, {
             json: {
                 name: lilipad.name,
                 text: lilipad.text
             }
         }).json<Lilipad>();
+        toast.info("lilipad saved");
+        return updatedLilipad;
     } catch (error) {
         console.log(error);
+        toast.error("failed to save lilipad...", {
+            autoClose: 5000
+        });
         return null;
     }
 }
@@ -104,9 +121,13 @@ export async function updateLilipad(lilipad: Lilipad): Promise<Lilipad | null> {
 export async function deleteLilipad(lilipad: LilipadInfo): Promise<boolean> {
     try {
         await http.delete(`lilipads/${lilipad.id}`);
+        toast.info("lilipad deleted");
         return true;
     } catch (error) {
         console.log(error);
+        toast.error("failed to delete lilipad...", {
+            autoClose: 5000
+        });
         return false;
     }
 }

@@ -70,10 +70,13 @@ const LilipadList = (props: LilipadListProps) => {
     }
 
     const handleSaveLilipad = async () => {
-        setEditingLilipad(await updateLilipad({
+        const updatedLilipad = await updateLilipad({
             ...editingLilipad as Lilipad,
             text
-        }));
+        });
+        if (updatedLilipad !== null) {
+            setEditingLilipad(updatedLilipad);
+        }
     }
 
     const handleEditorChange = (value: string | undefined) => {
