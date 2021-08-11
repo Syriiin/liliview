@@ -56,13 +56,15 @@ const LilipadList = (props: LilipadListProps) => {
 
     const handleNewLilipad = () => {
         async function request() {
-            const lilipad = await createLilipad(prompt("lilipad name") || "lilipad");
-            if (lilipad !== null) {
-                setLilipads([
-                    ...lilipads,
-                    lilipad
-                ]);
-                setSelectedLilipad(lilipad);
+            if (isSaved() || window.confirm("Are you sure you want to close the current lilipad?\nUnsaved changes will be lost.")) {
+                const lilipad = await createLilipad(prompt("lilipad name") || "lilipad");
+                if (lilipad !== null) {
+                    setLilipads([
+                        ...lilipads,
+                        lilipad
+                    ]);
+                    setSelectedLilipad(lilipad);
+                }
             }
         }
 
@@ -92,6 +94,14 @@ const LilipadList = (props: LilipadListProps) => {
         }
     }
 
+    const switchLilipad = (lilipad: LilipadInfo) => {
+        if (isSaved() || window.confirm("Are you sure you want to close the current lilipad?\nUnsaved changes will be lost.")) {
+            setSelectedLilipad(lilipad);
+        }
+    }
+
+    const isSaved = () => editingLilipad === null || editingLilipad.text === text;
+
     return (
         <Container fluid>
             <Row className="vh-100">
@@ -100,8 +110,8 @@ const LilipadList = (props: LilipadListProps) => {
                         <h3 className="m-3">lilipads</h3>
                         <ListGroup className="mt-3" variant="flush">
                             {lilipads.map(lilipad => (
-                                <ListGroup.Item active={lilipad.id === selectedLilipad?.id} key={lilipad.id} action as="button" onClick={() => setSelectedLilipad(lilipad)}>
-                                    {lilipad.name}
+                                <ListGroup.Item active={lilipad.id === editingLilipad?.id} key={lilipad.id} action as="button" onClick={() => switchLilipad(lilipad)}>
+                                    {lilipad.name}{lilipad.id === editingLilipad?.id && !isSaved() && " - UNSAVED"}
                                 </ListGroup.Item>
                             ))}
                         </ListGroup>
