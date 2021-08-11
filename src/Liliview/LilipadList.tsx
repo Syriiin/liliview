@@ -84,12 +84,14 @@ const LilipadList = (props: LilipadListProps) => {
     };
 
     const handleSaveLilipad = async () => {
-        const updatedLilipad = await updateLilipad({
-            ...(editingLilipad as Lilipad),
-            text,
-        });
-        if (updatedLilipad !== null) {
-            setEditingLilipad(updatedLilipad);
+        if (!isSaved()) {
+            const updatedLilipad = await updateLilipad({
+                ...(editingLilipad as Lilipad),
+                text,
+            });
+            if (updatedLilipad !== null) {
+                setEditingLilipad(updatedLilipad);
+            }
         }
     };
 
