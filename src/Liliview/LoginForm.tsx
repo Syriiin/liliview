@@ -3,6 +3,10 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { login, register } from "../requests";
 import { User } from "../types";
 
+interface SubmitEvent extends Event {
+    readonly submitter: HTMLElement;
+}
+
 interface LoginFormProps {
     setUser: (user: User) => void;
 }
@@ -13,8 +17,21 @@ const LoginForm = (props: LoginFormProps) => {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        // TODO: remove this in favour of a separate form for registering
+        // SubmitEvent isn't standard yet
+        const submitterName = (
+            (e.nativeEvent as SubmitEvent)?.submitter as HTMLButtonElement
+        )?.name;
+        if (submitterName === "registerButton") {
+            handleRegister();
+        } else {
+            handleLogin();
+        }
+    };
+
+    const handleLogin = async () => {
         setLoading(true);
         const user = await login(username, password);
         setLoading(false);
@@ -45,7 +62,7 @@ const LoginForm = (props: LoginFormProps) => {
                 <Col xs={4} className="align-middle">
                     <h1>welcome to lili</h1>
                     <p className="text-danger">{errorMessage}</p>
-                    <Form onSubmit={handleLogin}>
+                    <Form onSubmit={handleSubmit}>
                         <Form.Group
                             className="mb-3"
                             controlId="formBasicUsername"
@@ -56,6 +73,8 @@ const LoginForm = (props: LoginFormProps) => {
                                 placeholder="username"
                                 type="text"
                                 value={username}
+                                required
+                                maxLength={30}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </Form.Group>
@@ -69,6 +88,8 @@ const LoginForm = (props: LoginFormProps) => {
                                 placeholder="password"
                                 type="password"
                                 value={password}
+                                required
+                                maxLength={30}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </Form.Group>
@@ -76,13 +97,15 @@ const LoginForm = (props: LoginFormProps) => {
                             variant="primary"
                             type="submit"
                             disabled={loading}
+                            name="loginButton"
                         >
                             login
                         </Button>{" "}
                         <Button
                             variant="primary"
+                            type="submit"
                             disabled={loading}
-                            onClick={handleRegister}
+                            name="registerButton"
                         >
                             register
                         </Button>
