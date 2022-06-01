@@ -26,7 +26,17 @@ const LilipadList = (props: LilipadListProps) => {
 
     useEffect(() => {
         async function request() {
-            setLilipads(await loadLilipads());
+            const lilipads = await loadLilipads();
+            lilipads.sort((a, b) => {
+                if (a.name > b.name) {
+                    return 1;
+                } else if (a.name < b.name) {
+                    return -1;
+                }
+
+                return 0;
+            });
+            setLilipads(lilipads);
         }
 
         request();
